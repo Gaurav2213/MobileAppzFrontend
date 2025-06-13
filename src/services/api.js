@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-// axios interface to connect with backend
+// Create an axios instance with a base URL pointing to your backend
 const api = axios.create({
   baseURL: import.meta.env.REACT_APP_API_URL || 'http://localhost:5000/api/auth',
 });
 
+// Attach JWT to every request if available
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
