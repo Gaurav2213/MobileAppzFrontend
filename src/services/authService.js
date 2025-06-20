@@ -1,8 +1,5 @@
 import api from './api';
 
-//added sample api's as per the decided features
-//TODO: modify api's as per the backend requirement
-
 // Register a new user
 async function register({ name, email, mobile, password }) {
   const { data } = await api.post('/register', { name, email, mobile, password });
@@ -36,17 +33,27 @@ async function resetPassword(token, password) {
   return data;
 }
 
-// Resend Verification
+// src/services/authService.js
 async function resendVerification(email) {
   const { data } = await api.post('/resend-verification', { email });
   return data;
 }
 
+//update profile details
+async function updateProfile(data) {
+  const { data: user } = await api.put('/me', data);
+  return user;
+}
+
+//change password
+async function changePassword({ currentPassword, newPassword }) {
+  const { data } = await api.post('/change-password', { currentPassword, newPassword });
+  return data;
+}
+
 // Get current user
 async function getCurrentUser() {
-  console.log("in get currentuser call")
   const { data } = await api.get('/me');
-  console.log(data)
   return data;
 }
 
@@ -58,4 +65,6 @@ export default {
   resetPassword,
   resendVerification,
   getCurrentUser,
+  updateProfile,
+  changePassword,
 };
