@@ -20,6 +20,7 @@ import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 function App() {
   const { pathname } = useLocation();
@@ -92,7 +93,7 @@ function App() {
             />
 
             {/* Catch-all */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
       </div>
