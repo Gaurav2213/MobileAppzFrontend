@@ -20,6 +20,8 @@ import ChangePasswordPage from './pages/ChangePasswordPage/ChangePasswordPage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import MyReportsPage from './pages/MyReportsPage/MyReportsPage';
+import EditReportPage from './pages/EditReportPage/EditReportPage';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
 function App() {
@@ -88,6 +90,24 @@ function App() {
               element={
                 <ProtectedRoute requireAdmin>
                   <AdminPanelPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/my-reports"
+              element={
+                <ProtectedRoute>
+                  <MyReportsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/report/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <EditReportPage/>
                 </ProtectedRoute>
               }
             />
