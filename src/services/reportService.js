@@ -12,7 +12,7 @@ export async function deleteReport(id) {
   return data;
 }
 
-// fetch a single report for editing
+// (Optional) fetch a single report for editing
 export async function getReportById(id) {
   const { data } = await api.get(`/reports/${id}`);
   return data;
@@ -47,3 +47,18 @@ export async function addComment(reportId, text) {
   const { data } = await api.post(`/reports/${reportId}/comments`, { text });
   return data;
 }
+
+// edit an existing comment
+export async function updateComment(commentId, text) {
+  const { data } = await api.put(`/comments/${commentId}`, { text });
+  return data;
+}
+
+// delete a comment
+export async function deleteComment(commentId) {
+  await api.delete(`/comments/${commentId}`);
+}
+
+// existing exports…
+export const getHeatmap = () =>
+  api.get('/reports/heatmap').then(res => res.data);
