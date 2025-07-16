@@ -1,0 +1,507 @@
+From 0efb24ea66336bb2599dfcd117b0c4f9e40438b7 Mon Sep 17 00:00:00 2001
+From: Rahulraj888 <reddavenirahul@gmail.com>
+Date: Wed, 16 Jul 2025 14:30:04 -0400
+Subject: [PATCH] week10patchgaurav
+
+---
+ src/pages/DashboardPage/Dashboard.module.css | 134 +++++++--------
+ src/pages/DashboardPage/DashboardPage.jsx    | 172 +++++++++++++------
+ src/pages/DashboardPage/ReportListItem.jsx   |  41 ++++-
+ src/services/adminService.js                 |  20 +++
+ 4 files changed, 243 insertions(+), 124 deletions(-)
+ create mode 100644 src/services/adminService.js
+
+diff --git a/src/pages/DashboardPage/Dashboard.module.css b/src/pages/DashboardPage/Dashboard.module.css
+index de46bd5..777114e 100644
+--- a/src/pages/DashboardPage/Dashboard.module.css
++++ b/src/pages/DashboardPage/Dashboard.module.css
+@@ -1,68 +1,68 @@
+ .reportCard {
+-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+-    border-radius: 12px;
+-    margin-bottom: 1rem;
+-    transition: box-shadow 0.2s ease-in-out;
+-  }
+-  .reportCard:hover {
+-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+-  }
+-  
+-  .roundedBox {
+-    border-radius: 10px !important;
+-  }
+-  
+-  .statusBadge {
+-    background-color: #e6f0ff;
+-    color: #0056b3;
+-    padding: 0.2rem 0.6rem;
+-    border-radius: 0.5rem;
+-    font-weight: 600;
+-    font-size: 0.8rem;
+-  }
+-  
+-  .btnPost {
+-    transition: background-color 0.3s ease, transform 0.2s ease;
+-  }
+-  .btnPost:hover {
+-    background-color: #0d6efd;
+-    color: white;
+-    transform: scale(1.02);
+-  }
+-  
+-  .legendBox {
+-    display: flex;
+-    flex-wrap: wrap;
+-    gap: 1rem;
+-    justify-content: center;
+-    padding: 0.5rem 1rem;
+-  }
+-  
+-  /* Dark mode support */
+-  :global(body.dark) {
+-    background-color: #121212;
+-    color: #f0f0f0;
+-  }
+-  
+-  :global(.dark .card),
+-  :global(.dark .list-group-item) {
+-    background-color: #1e1e1e;
+-    color: #f0f0f0;
+-    border-color: #333;
+-  }
+-  
+-  /* Dashboard.module.css */
+-  /* .filterRow {
+-    position: relative;
+-    z-index: 2000;     
+-    background: white;  
+-    padding: 0.5rem 0;
+-  } */
+-  
+-  .statCard {
+-    background-color: #f8f9fa;
+-    padding: 1rem;
+-    border-radius: 10px;
+-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+-     width: 100%;
+-  }
+\ No newline at end of file
++  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
++  border-radius: 12px;
++  margin-bottom: 1rem;
++  transition: box-shadow 0.2s ease-in-out;
++}
++.reportCard:hover {
++  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
++}
++
++.roundedBox {
++  border-radius: 10px !important;
++}
++
++.statusBadge {
++  background-color: #e6f0ff;
++  color: #0056b3;
++  padding: 0.2rem 0.6rem;
++  border-radius: 0.5rem;
++  font-weight: 600;
++  font-size: 0.8rem;
++}
++
++.btnPost {
++  transition: background-color 0.3s ease, transform 0.2s ease;
++}
++.btnPost:hover {
++  background-color: #0d6efd;
++  color: white;
++  transform: scale(1.02);
++}
++
++.legendBox {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 1rem;
++  justify-content: center;
++  padding: 0.5rem 1rem;
++}
++
++/* Dark mode support */
++:global(body.dark) {
++  background-color: #121212;
++  color: #f0f0f0;
++}
++
++:global(.dark .card),
++:global(.dark .list-group-item) {
++  background-color: #1e1e1e;
++  color: #f0f0f0;
++  border-color: #333;
++}
++
++/* Dashboard.module.css */
++/* .filterRow {
++  position: relative;
++  z-index: 2000;     
++  background: white;  
++  padding: 0.5rem 0;
++} */
++
++.statCard {
++  background-color: #f8f9fa;
++  padding: 1rem;
++  border-radius: 10px;
++  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
++   width: 100%;
++}
+\ No newline at end of file
+diff --git a/src/pages/DashboardPage/DashboardPage.jsx b/src/pages/DashboardPage/DashboardPage.jsx
+index d66cf29..9641de9 100644
+--- a/src/pages/DashboardPage/DashboardPage.jsx
++++ b/src/pages/DashboardPage/DashboardPage.jsx
+@@ -43,8 +43,18 @@ export default function DashboardPage() {
+   const sorted = useMemo(() => {
+     if (!userLocation) return reports;
+     return [...reports].sort((a, b) =>
+-      haversineDistance(userLocation.latitude, userLocation.longitude, a.location.coordinates[1], a.location.coordinates[0]) -
+-      haversineDistance(userLocation.latitude, userLocation.longitude, b.location.coordinates[1], b.location.coordinates[0])
++      haversineDistance(
++        userLocation.latitude,
++        userLocation.longitude,
++        a.location.coordinates[1],
++        a.location.coordinates[0]
++      ) -
++      haversineDistance(
++        userLocation.latitude,
++        userLocation.longitude,
++        b.location.coordinates[1],
++        b.location.coordinates[0]
++      )
+     );
+   }, [reports, userLocation]);
+ 
+@@ -55,20 +65,30 @@ export default function DashboardPage() {
+   const avgRes = useMemo(() => {
+     const done = reports.filter((r) => r.status === "Fixed" && r.updatedAt);
+     if (!done.length) return 0;
+-    const days = done.reduce((sum, r) =>
+-      sum + (new Date(r.updatedAt) - new Date(r.createdAt)) / (1000 * 60 * 60 * 24), 0) / done.length;
++    const days =
++      done.reduce(
++        (sum, r) =>
++          sum + (new Date(r.updatedAt) - new Date(r.createdAt)) / (1000 * 60 * 60 * 24),
++        0
++      ) / done.length;
+     return days.toFixed(1);
+   }, [reports]);
+ 
+-  const handleUpvote = useCallback(async (id) => {
+-    await upvoteReport(id);
+-    refetch();
+-  }, [refetch]);
++  const handleUpvote = useCallback(
++    async (id) => {
++      await upvoteReport(id);
++      refetch();
++    },
++    [refetch]
++  );
+ 
+-  const handleAddComment = useCallback(async (id, text) => {
+-    await addComment(id, text);
+-    refetch();
+-  }, [refetch]);
++  const handleAddComment = useCallback(
++    async (id, text) => {
++      await addComment(id, text);
++      refetch();
++    },
++    [refetch]
++  );
+ 
+   const totalPages = Math.max(1, Math.ceil(reports.length / PAGE_SIZE));
+ 
+@@ -77,14 +97,18 @@ export default function DashboardPage() {
+       <h2>Dashboard</h2>
+       {(loading || error) && (
+         <Alert variant={error ? "danger" : "info"}>
+-          {error ? "Failed to load" : "Loading reports..."}
++          {error ? "Failed to load reports." : "Loading reports..."}
+         </Alert>
+       )}
+ 
+       {/* Filters */}
+       <Row className={`mb-3 ${styles.filterRow}`}>
+         <Col sm={6}>
+-          <select className="form-select" value={statusFilter} onChange={e => setStatus(e.target.value)}>
++          <select
++            className="form-select"
++            value={statusFilter}
++            onChange={(e) => setStatus(e.target.value)}
++          >
+             <option value="all">Filter by Status</option>
+             <option>Pending</option>
+             <option>In Progress</option>
+@@ -92,7 +116,11 @@ export default function DashboardPage() {
+           </select>
+         </Col>
+         <Col sm={6}>
+-          <select className="form-select" value={typeFilter} onChange={e => setType(e.target.value)}>
++          <select
++            className="form-select"
++            value={typeFilter}
++            onChange={(e) => setType(e.target.value)}
++          >
+             <option value="all">Filter by Type</option>
+             <option>Pothole</option>
+             <option>Streetlight</option>
+@@ -113,18 +141,36 @@ export default function DashboardPage() {
+               onMove={(e) => setViewState(e.viewState)}
+             >
+               {userLocation && (
+-                <Marker longitude={userLocation.longitude} latitude={userLocation.latitude} anchor="bottom">
+-                  <div className="bg-primary rounded-circle" style={{ width: 12, height: 12 }} />
++                <Marker
++                  longitude={userLocation.longitude}
++                  latitude={userLocation.latitude}
++                  anchor="bottom"
++                >
++                  <div
++                    className="bg-primary rounded-circle"
++                    style={{ width: 12, height: 12 }}
++                  />
+                 </Marker>
+               )}
+               {paginated.map((r) => (
+-                <Marker key={r._id} longitude={r.location.coordinates[0]} latitude={r.location.coordinates[1]} anchor="bottom">
+-                  <div style={{ cursor: "pointer" }} onClick={(e) => {
+-                    e.stopPropagation();
+-                    setSelectedReport(r);
+-                    setShowDetail(true);
+-                  }}>
+-                    <FaMapMarkerAlt size={34} color={STATUS_COLORS[r.status] || "gray"} />
++                <Marker
++                  key={r._id}
++                  longitude={r.location.coordinates[0]}
++                  latitude={r.location.coordinates[1]}
++                  anchor="bottom"
++                >
++                  <div
++                    style={{ cursor: "pointer" }}
++                    onClick={(e) => {
++                      e.stopPropagation();
++                      setSelectedReport(r);
++                      setShowDetail(true);
++                    }}
++                  >
++                    <FaMapMarkerAlt
++                      size={34}
++                      color={STATUS_COLORS[r.status] || "gray"}
++                    />
+                   </div>
+                 </Marker>
+               ))}
+@@ -137,28 +183,56 @@ export default function DashboardPage() {
+ 
+         <Col lg={4}>
+           <h5>Recent Reports</h5>
+-          <ListGroup variant="flush">
+-            {paginated.map((r) => (
+-              <ReportListItem
+-                key={r._id}
+-                report={r}
+-                userLocation={userLocation}
+-                onUpvote={handleUpvote}
+-                onAddComment={handleAddComment}
+-              />
+-            ))}
+-          </ListGroup>
+-          <div className="d-flex justify-content-center mt-3">
+-            <Pagination size="sm">
+-              <Pagination.First disabled={page === 1} onClick={() => setPage(1)} />
+-              <Pagination.Prev disabled={page === 1} onClick={() => setPage(p => p - 1)} />
+-              {Array.from({ length: totalPages }, (_, idx) => (
+-                <Pagination.Item key={idx} active={idx + 1 === page} onClick={() => setPage(idx + 1)}>{idx + 1}</Pagination.Item>
+-              ))}
+-              <Pagination.Next disabled={page === totalPages} onClick={() => setPage(p => p + 1)} />
+-              <Pagination.Last disabled={page === totalPages} onClick={() => setPage(totalPages)} />
+-            </Pagination>
+-          </div>
++
++          {total === 0 && !loading && !error ? (
++            <Alert variant="info">No reports to show.</Alert>
++          ) : (
++            <>
++              <ListGroup variant="flush">
++                {paginated.map((r) => (
++                  <ReportListItem
++                    key={r._id}
++                    report={r}
++                    userLocation={userLocation}
++                    onUpvote={handleUpvote}
++                    onAddComment={handleAddComment}
++                  />
++                ))}
++              </ListGroup>
++
++              {total > PAGE_SIZE && (
++                <div className="d-flex justify-content-center mt-3">
++                  <Pagination size="sm">
++                    <Pagination.First
++                      disabled={page === 1}
++                      onClick={() => setPage(1)}
++                    />
++                    <Pagination.Prev
++                      disabled={page === 1}
++                      onClick={() => setPage((p) => p - 1)}
++                    />
++                    {Array.from({ length: totalPages }, (_, idx) => (
++                      <Pagination.Item
++                        key={idx}
++                        active={idx + 1 === page}
++                        onClick={() => setPage(idx + 1)}
++                      >
++                        {idx + 1}
++                      </Pagination.Item>
++                    ))}
++                    <Pagination.Next
++                      disabled={page === totalPages}
++                      onClick={() => setPage((p) => p + 1)}
++                    />
++                    <Pagination.Last
++                      disabled={page === totalPages}
++                      onClick={() => setPage(totalPages)}
++                    />
++                  </Pagination>
++                </div>
++              )}
++            </>
++          )}
+         </Col>
+       </Row>
+ 
+@@ -166,8 +240,10 @@ export default function DashboardPage() {
+         report={selectedReport}
+         show={showDetail}
+         onHide={() => setShowDetail(false)}
+-        onUpvote={() => handleUpvote(selectedReport._id)}
+-        onAddComment={(text) => handleAddComment(selectedReport._id, text)}
++        onUpvote={() => handleUpvote(selectedReport?._id)}
++        onAddComment={(text) =>
++          selectedReport && handleAddComment(selectedReport._id, text)
++        }
+         userLocation={userLocation}
+         BACKEND={import.meta.env.VITE_API_URL || "http://localhost:5000"}
+         MAPBOX_TOKEN={MAPBOX_TOKEN}
+diff --git a/src/pages/DashboardPage/ReportListItem.jsx b/src/pages/DashboardPage/ReportListItem.jsx
+index 91c704c..39837ae 100644
+--- a/src/pages/DashboardPage/ReportListItem.jsx
++++ b/src/pages/DashboardPage/ReportListItem.jsx
+@@ -1,8 +1,9 @@
+-import React, { useState, useEffect } from "react";
++import React, { useState, useEffect, useContext } from "react";
+ import { Button, Image, ListGroup } from "react-bootstrap";
+ import ReportDetailModal from "../../components/ReportDetailModal";
+ import { haversineDistance } from "../../utils/haversine";
+ import { timeAgo } from "../../utils/timeAgo";
++import { AuthContext } from "../../context/AuthContext";
+ 
+ const BACKEND = import.meta.env.VITE_API_URL || "http://localhost:5000";
+ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+@@ -15,10 +16,14 @@ const STATUS_COLORS = {
+ export default function ReportListItem({ report, onUpvote, onAddComment, userLocation }) {
+   const [showDetail, setShowDetail] = useState(false);
+   const [address, setAddress] = useState(null);
++  const { user } = useContext(AuthContext);
++  const isAdmin = user?.role === 'admin';  // adjust if your user object uses a different flag
+ 
+   useEffect(() => {
+     const [lng, lat] = report.location.coordinates;
+-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}`)
++    fetch(
++      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}`
++    )
+       .then((r) => r.json())
+       .then((d) => {
+         if (d.features?.[0]) setAddress(d.features[0].place_name);
+@@ -58,28 +63,46 @@ export default function ReportListItem({ report, onUpvote, onAddComment, userLoc
+               {address && <p className="mt-1 small">{address}</p>}
+             </div>
+           </div>
++
+           <span
+             style={{
+               backgroundColor: STATUS_COLORS[report.status] || "#6c757d",
+               color: "#fff",
+               padding: "0.25em 0.5em",
+               borderRadius: "0.25rem",
+-              fontSize: "0.8em"
++              fontSize: "0.8em",
+             }}
+           >
+             {report.status}
+           </span>
+         </div>
++
+         <div className="mt-2 d-flex gap-3">
++          {/* Everyone can view details */}
+           <Button variant="link" size="sm" onClick={() => setShowDetail(true)}>
+             View Details
+           </Button>
+-          <Button variant="link" size="sm" onClick={() => onUpvote(report._id)}>
+-            {report.hasUpvoted ? "👍" : "👍🏻"} {report.upvoteCount || 0}
+-          </Button>
+-          <Button variant="link" size="sm" onClick={() => setShowDetail(true)}>
+-            💬 {report.commentCount || 0}
+-          </Button>
++
++          {/* Only non-admins can upvote or comment */}
++          {!isAdmin && (
++            <>
++              <Button
++                variant="link"
++                size="sm"
++                onClick={() => onUpvote(report._id)}
++              >
++                {report.hasUpvoted ? "👍" : "👍🏻"} {report.upvoteCount || 0}
++              </Button>
++
++              <Button
++                variant="link"
++                size="sm"
++                onClick={() => setShowDetail(true)}
++              >
++                💬 {report.commentCount || 0}
++              </Button>
++            </>
++          )}
+         </div>
+       </ListGroup.Item>
+ 
+diff --git a/src/services/adminService.js b/src/services/adminService.js
+new file mode 100644
+index 0000000..69741cf
+--- /dev/null
++++ b/src/services/adminService.js
+@@ -0,0 +1,20 @@
++import api from './api';
++
++// Dashboard stats
++export function getAdminDashboard() {
++  return api.get('/admin/dashboard').then(res => res.data);
++}
++
++// List reports
++export function listReports({ status, type, page, limit, sortBy, sortOrder }) {
++  return api
++    .get('/admin/reports', {
++      params: { status, type, page, limit, sortBy, sortOrder }
++    })
++    .then(res => res.data);
++}
++
++// Update report status
++export function updateReportStatus(id, status, rejectReason) {
++  return api.patch(`/admin/reports/${id}/status`, { status, rejectReason }).then(res => res.data);
++}
+-- 
+2.36.1.windows.1
+
