@@ -1,138 +1,109 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaTwitter, FaFacebookF, FaLinkedinIn, FaEnvelope, FaPhone, FaArrowUp } from 'react-icons/fa';
-import { Form, Button } from 'react-bootstrap';
+import React, { useContext, useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import logo from '/logo.jpeg';
 
-export default function Footer() {
+export default function Header() {
+  const { user, logout } = useContext(AuthContext);
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close mobile menu on route change
+  useEffect(() => setMenuOpen(false), [location]);
+
+  // Define nav items with access control
+  const navItems = [
+    { to: '/dashboard', label: 'Dashboard', roles: ['user', 'admin'] },
+    { to: '/heatmap', label: 'Heatmap', roles: ['user', 'admin'] },
+    { to: '/report', label: 'New Report', roles: ['user'] },
+    { to: '/admin', label: 'Admin Panel', roles: ['admin'] },
+    { to: '/profile', label: 'My Profile', roles: ['user', 'admin'] },
+    { to: '/my-reports', label: 'My Reports', roles: ['user'] },
+  ];
+
+  // Render individual link with active highlight
+  const renderLink = ({ to, label }) => {
+    const isActive = location.pathname === to;
+    return (
+      <li className="nav-item" key={to}>
+        <Link
+          to={to}
+          className={`nav-link fw-bold ${isActive ? 'active text-primary' : 'text-dark'}`}
+          aria-current={isActive ? 'page' : undefined}
+        >
+          {label}
+        </Link>
+      </li>
+    );
+  };
+
   return (
-    <footer className="bg-dark text-white pt-5 pb-4">
-      <div className="container">
-        {/* Responsive grid: 1 column on xs, 2 on md, 4 on lg */}
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-          {/* Brand & Description */}
-          <div className="col text-center text-md-start">
-            <div className="d-inline-flex align-items-center mb-3">
-              <img
-                src="/logo.jpeg"
-                alt="Logo"
-                style={{ width: '32px', height: '32px', marginRight: '10px' }}
-              />
-              <span className="fw-bold fs-5">Mobile Appz</span>
-            </div>
-            <p className="small">
-              Empowering citizens to improve their communities through technology-driven reporting.
-            </p>
-            <div>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-white me-3"
-                aria-label="Twitter"
-              >
-                <FaTwitter />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-white me-3"
-                aria-label="Facebook"
-              >
-                <FaFacebookF />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                className="text-white"
-                aria-label="LinkedIn"
-              >
-                <FaLinkedinIn />
-              </a>
-            </div>
-          </div>
+    <header className="shadow-sm mb-0 pb-0">
+      <nav
+        className="navbar navbar-expand-md navbar-light px-3 py-2"
+        style={{ backgroundColor: '#75CFF0' }}
+      >
+        <div className="container-fluid">
+          {/* Logo */}
+          <Link className="navbar-brand d-flex align-items-center" to="/">
+            <img
+              src={logo}
+              alt="Mobile Appz Logo"
+              style={{ height: '30px', marginRight: '10px' }}
+            />
+            <span className="fw-bold">Mobile Appz</span>
+          </Link>
 
-          {/* Quick Links */}
-          <div className="col text-center text-md-start">
-            <h5 className="mb-3">Quick Links</h5>
-            <ul className="list-unstyled small">
-              <li className="mb-2">
-                <Link to="/" className="text-white text-decoration-none">
-                  Home
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link to="/about" className="text-white text-decoration-none">
-                  About Us
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link to="/contact" className="text-white text-decoration-none">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Resources & Legal */}
-          <div className="col text-center text-md-start">
-            <h5 className="mb-3">Resources</h5>
-            <ul className="list-unstyled small">
-              <li className="mb-2">
-                <Link to="/privacy" className="text-white text-decoration-none">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link to="/terms" className="text-white text-decoration-none">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Subscribe & Contact */}
-          <div className="col text-center text-md-start">
-            <h5 className="mb-3">Stay Updated</h5>
-            <Form className="d-flex flex-column flex-sm-row mb-3">
-              <Form.Control
-                type="email"
-                placeholder="Your email"
-                className="mb-2 mb-sm-0 me-sm-2"
-                aria-label="Email address"
-              />
-              <Button variant="primary" className="w-auto">
-                Subscribe
-              </Button>
-            </Form>
-            <div className="small">
-              <p className="mb-2">
-                <FaEnvelope className="me-2" /> support@mobileappz.com
-              </p>
-              <p className="mb-0">
-                <FaPhone className="me-2" /> +1 (555) 123-4567
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <hr className="bg-light mt-4" />
-
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center pt-3">
-          <p className="mb-2 mb-md-0 small text-center text-md-start">
-            &copy; {new Date().getFullYear()} Mobile Appz. All Rights Reserved.
-          </p>
-          <Button
-            variant="link"
-            className="text-white p-0 align-self-center"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            aria-label="Back to top"
+          {/* Mobile toggler */}
+          <button
+            className="navbar-toggler"
+            type="button"
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(open => !open)}
           >
-            <FaArrowUp />
-          </Button>
+            <span className="navbar-toggler-icon" />
+          </button>
+
+          {/* Collapsible links */}
+          <div className={`collapse navbar-collapse ${menuOpen ? 'show' : ''}`}>
+            <ul className="navbar-nav ms-auto align-items-center">
+              {!user ? (
+                <>
+                  <li className="nav-item">
+                    <Link
+                      to="/login"
+                      className={`nav-link fw-bold ${location.pathname === '/login' ? 'active text-primary' : 'text-dark'}`}
+                      aria-current={location.pathname === '/login' ? 'page' : undefined}
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item ms-2">
+                    <Link to="/register" className="btn btn-primary fw-bold px-4">
+                      Sign Up
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  {navItems.map(item =>
+                    item.roles.includes(user.role) ? renderLink(item) : null
+                  )}
+                  <li className="nav-item ms-3">
+                    <button
+                      className="btn btn-outline-secondary fw-bold"
+                      onClick={logout}
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
         </div>
-      </div>
-    </footer>
+      </nav>
+    </header>
   );
 }
