@@ -58,18 +58,18 @@ export default function Footer() {
             <h5 className="mb-3">Quick Links</h5>
             <ul className="list-unstyled small">
               <li className="mb-2">
-                <Link to="/" className="text-white text-decoration-none">
-                  Home
+                <Link to="/dashboard" className="text-white text-decoration-none">
+                  Dashboard
                 </Link>
               </li>
               <li className="mb-2">
-                <Link to="/about" className="text-white text-decoration-none">
-                  About Us
+                <Link to="/report" className="text-white text-decoration-none">
+                  New Report
                 </Link>
               </li>
               <li className="mb-2">
-                <Link to="/contact" className="text-white text-decoration-none">
-                  Contact
+                <Link to="/login" className="text-white text-decoration-none">
+                  Login
                 </Link>
               </li>
             </ul>
@@ -94,18 +94,7 @@ export default function Footer() {
 
           {/* Subscribe & Contact */}
           <div className="col text-center text-md-start">
-            <h5 className="mb-3">Stay Updated</h5>
-            <Form className="d-flex flex-column flex-sm-row mb-3">
-              <Form.Control
-                type="email"
-                placeholder="Your email"
-                className="mb-2 mb-sm-0 me-sm-2"
-                aria-label="Email address"
-              />
-              <Button variant="primary" className="w-auto">
-                Subscribe
-              </Button>
-            </Form>
+            <h5 className="mb-3">Our Contact Details</h5>
             <div className="small">
               <p className="mb-2">
                 <FaEnvelope className="me-2" /> support@mobileappz.com

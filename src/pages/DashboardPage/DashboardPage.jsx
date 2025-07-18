@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Container, Row, Col, Alert, Card, Pagination, ListGroup } from "react-bootstrap";
+import React, { useState, useEffect, useMemo, useCallback, useContext } from "react";
+import { Container, Row, Col, Alert, Card, Pagination, Dropdown, ButtonGroup, ListGroup } from "react-bootstrap";
 import Map, { Marker } from "react-map-gl";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import styles from "./Dashboard.module.css";
+import { AuthContext } from "../../context/AuthContext";
 
 import useReports from "./useReports";
 import { haversineDistance } from "../../utils/haversine";
@@ -30,6 +31,8 @@ export default function DashboardPage() {
   const [page, setPage] = useState(1);
   const [selectedReport, setSelectedReport] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
+  const { user } = useContext(AuthContext);
+  const isUser = user?.role !== 'admin';  // adjust if your user object uses a different flag
 
   useEffect(() => setPage(1), [statusFilter, typeFilter]);
 
@@ -102,33 +105,46 @@ export default function DashboardPage() {
       )}
 
       {/* Filters */}
-      <Row className={`mb-3 ${styles.filterRow}`}>
-        <Col sm={6}>
-          <select
-            className="form-select"
-            value={statusFilter}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="all">Filter by Status</option>
-            <option>Pending</option>
-            <option>In Progress</option>
-            <option>Fixed</option>
-          </select>
+      <Row className={`mb-3 g-2 ${styles.filterRow}`}>
+        <Col xs={12} md={6}>
+          <Dropdown as={ButtonGroup} className="w-100">
+            <Dropdown.Toggle variant="light" className="w-100 text-start border">
+              {statusFilter === 'all' ? 'All Statuses' : statusFilter}
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="w-100">
+              {['all', 'Pending', 'In Progress', 'Fixed', 'Rejected'].map((s) => (
+                <Dropdown.Item
+                  key={s}
+                  active={s === statusFilter}
+                  onClick={() => setStatus(s)}
+                >
+                  {s === 'all' ? 'All Statuses' : s}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
         </Col>
-        <Col sm={6}>
-          <select
-            className="form-select"
-            value={typeFilter}
-            onChange={(e) => setType(e.target.value)}
-          >
-            <option value="all">Filter by Type</option>
-            <option>Pothole</option>
-            <option>Streetlight</option>
-            <option>Graffiti</option>
-            <option>Other</option>
-          </select>
+
+        <Col xs={12} md={6}>
+          <Dropdown as={ButtonGroup} className="w-100">
+            <Dropdown.Toggle variant="light" className="w-100 text-start border">
+              {typeFilter === 'all' ? 'All Types' : typeFilter}
+            </Dropdown.Toggle>
+            <Dropdown.Menu className="w-100">
+              {['all', 'Pothole', 'Streetlight', 'Graffiti', 'Other'].map((t) => (
+                <Dropdown.Item
+                  key={t}
+                  active={t === typeFilter}
+                  onClick={() => setType(t)}
+                >
+                  {t === 'all' ? 'All Types' : t}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
         </Col>
       </Row>
+
 
       <Row>
         <Col lg={8} className="mb-4">
@@ -235,7 +251,7 @@ export default function DashboardPage() {
           )}
         </Col>
       </Row>
-
+      
       <ReportDetailModal
         report={selectedReport}
         show={showDetail}
@@ -247,6 +263,7 @@ export default function DashboardPage() {
         userLocation={userLocation}
         BACKEND={import.meta.env.VITE_API_URL || "http://localhost:5000"}
         MAPBOX_TOKEN={MAPBOX_TOKEN}
+        disableComments = {!isUser}
       />
     </Container>
   );
