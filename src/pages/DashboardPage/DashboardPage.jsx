@@ -85,6 +85,11 @@ export default function DashboardPage() {
     [refetch]
   );
 
+  const handleDeleteComment = useCallback(() => {
+    console.log("calling refetch");
+    refetch();
+  }, [refetch]);
+
   const handleAddComment = useCallback(
     async (id, text) => {
       await addComment(id, text);
@@ -112,7 +117,7 @@ export default function DashboardPage() {
               {statusFilter === 'all' ? 'All Statuses' : statusFilter}
             </Dropdown.Toggle>
             <Dropdown.Menu className="w-100">
-              {['all', 'Pending', 'In Progress', 'Fixed', 'Rejected'].map((s) => (
+              {['all', 'Pending', 'In Progress', 'Fixed'].map((s) => (
                 <Dropdown.Item
                   key={s}
                   active={s === statusFilter}
@@ -199,7 +204,6 @@ export default function DashboardPage() {
 
         <Col lg={4}>
           <h5>Recent Reports</h5>
-
           {total === 0 && !loading && !error ? (
             <Alert variant="info">No reports to show.</Alert>
           ) : (
@@ -212,6 +216,7 @@ export default function DashboardPage() {
                     userLocation={userLocation}
                     onUpvote={handleUpvote}
                     onAddComment={handleAddComment}
+                    onDeleteComment={handleDeleteComment}
                   />
                 ))}
               </ListGroup>
@@ -257,12 +262,13 @@ export default function DashboardPage() {
         show={showDetail}
         onHide={() => setShowDetail(false)}
         onUpvote={() => handleUpvote(selectedReport?._id)}
-        onAddComment={(text) =>
+        onAddComment={(text) => 
           selectedReport && handleAddComment(selectedReport._id, text)
         }
         userLocation={userLocation}
         BACKEND={import.meta.env.VITE_API_URL || "http://localhost:5000"}
         MAPBOX_TOKEN={MAPBOX_TOKEN}
+        onDeleteComment={() => handleDeleteComment()}
         disableComments = {!isUser}
       />
     </Container>

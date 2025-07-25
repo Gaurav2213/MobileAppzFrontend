@@ -41,6 +41,7 @@ export default function ReportDetailModal({
   userLocation,
   BACKEND,
   MAPBOX_TOKEN,
+  onDeleteComment = () => {},
   disableComments = false,
 }) {
   const { user } = useContext(AuthContext);
@@ -113,6 +114,7 @@ export default function ReportDetailModal({
     if (!window.confirm("Delete this comment?")) return;
     await deleteComment(commentId);
     setComments((cs) => cs.filter((c) => c._id !== commentId));
+    onDeleteComment()
   };
 
   return (

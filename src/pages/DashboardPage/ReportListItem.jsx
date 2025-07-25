@@ -13,7 +13,7 @@ const STATUS_COLORS = {
   Fixed: "#2ecc71",
 };
 
-export default function ReportListItem({ report, onUpvote, onAddComment, userLocation }) {
+export default function ReportListItem({ report, onUpvote, onAddComment, userLocation, onDeleteComment }) {
   const [showDetail, setShowDetail] = useState(false);
   const [address, setAddress] = useState(null);
   const { user } = useContext(AuthContext);
@@ -115,6 +115,7 @@ export default function ReportListItem({ report, onUpvote, onAddComment, userLoc
         userLocation={userLocation}
         BACKEND={BACKEND}
         MAPBOX_TOKEN={MAPBOX_TOKEN}
+        onDeleteComment={onDeleteComment}
         disableComments={isAdmin}
       />
     </>

@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className="bg-dark text-white pt-5 pb-4">
       <div className="container">
         {/* Responsive grid: 1 column on xs, 2 on md, 4 on lg */}
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           {/* Brand & Description */}
           <div className="col text-center text-md-start">
             <div className="d-inline-flex align-items-center mb-3">
@@ -70,23 +70,6 @@ export default function Footer() {
               <li className="mb-2">
                 <Link to="/login" className="text-white text-decoration-none">
                   Login
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Resources & Legal */}
-          <div className="col text-center text-md-start">
-            <h5 className="mb-3">Resources</h5>
-            <ul className="list-unstyled small">
-              <li className="mb-2">
-                <Link to="/privacy" className="text-white text-decoration-none">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link to="/terms" className="text-white text-decoration-none">
-                  Terms of Service
                 </Link>
               </li>
             </ul>
