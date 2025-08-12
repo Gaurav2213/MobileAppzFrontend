@@ -78,10 +78,10 @@ pip install -r requirements.txt
 python app.py
 
 **## 📄 Project Documents
-- [FSDS Mobile Appz Core Documents](public/FSDS - Mobile Appz CORE DOCUMENTS)
-- [Rapid Planning Method (RPM)-How to become successful](public/Rapid Planning Method (RPM)-How to become successful)
-- [DFD & Sequence Diagram](public/Project 11_DFD+Sequence)
-- [Business Requirements Documents](public/Business Requirements Document)
+- [FSDS Mobile Appz Core Documents](public/CORE.pdf)
+- [Rapid Planning Method (RPM)-How to become successful](public/RPM.pdf)
+- [DFD & Sequence Diagram](public/DFD&SD.pdf)
+- [Business Requirements Documents](public/BRD.pdf)
 
 
 
