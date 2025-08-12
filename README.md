@@ -23,7 +23,32 @@ Mobile Appz is a full-stack platform where citizens can report infrastructure is
 ---
 
 ## 📸 Screenshots  
-> Keep it light — 2–3 per repo
+> ## 📸 Screenshots
+
+### Single image
+![Report Form](public/ReportIssue.png)
+
+### Link the image to open full-size
+[![Signin](public/)](public/SignIn.png)
+
+### GIF demo
+![AdminPanel](public/AdminPanel,png)
+
+### Two images side by side (Markdown table)
+| Report Form | Map with Markers |
+|---|---|
+| ![Report Form](public/report-form.png) | ![Map](public/map-markers.png) |
+
+### Three in a row (small thumbnails)
+| Login | Dashboard | Heatmap |
+|---|---|---|
+| <img src="public/login.png" width="260"> | <img src="public/Dashboard.png" width="260"> | <img src="public/HeatMap.png" width="260"> |
+*Heatmap highlighting recurring issue clusters.*
+### With a short caption
+![forgot Password](public/ForgotPassword.png)  
+
+
+
 
 **Frontend repo:**
 1. Report Form Page – with image upload & location picker  
@@ -77,14 +102,3 @@ npm run dev
 pip install -r requirements.txt
 python app.py
 
-**## 📄 Project Documents
-- [FSDS Mobile Appz Core Documents](public/CORE.pdf)
-- [Rapid Planning Method (RPM)-How to become successful](public/RPM.pdf)
-- [DFD & Sequence Diagram](public/DFD&SD.pdf)
-- [Business Requirements Documents](public/BRD.pdf)
-
-
-
-
-
-## 🔗 How It Works
