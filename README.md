@@ -30,22 +30,21 @@ Mobile Appz is a full-stack platform where citizens can report infrastructure is
 
 ### Link the image to open full-size
 [![Signin](public/)](public/SignIn.png)
-
-### GIF demo
-![AdminPanel](public/AdminPanel,png)
+###admin panel
+![AdminPanel](public/AdminPanel.png)
 
 ### Two images side by side (Markdown table)
-| Report Form | Map with Markers |
+| changeMyProfile | Map with Markers |
 |---|---|
-| ![Report Form](public/report-form.png) | ![Map](public/map-markers.png) |
+| ![Report Form](public/ChangeMyprofile.png) | ![Map](public/map-markers.png) |
 
 ### Three in a row (small thumbnails)
 | Login | Dashboard | Heatmap |
 |---|---|---|
-| <img src="public/login.png" width="260"> | <img src="public/Dashboard.png" width="260"> | <img src="public/HeatMap.png" width="260"> |
+| <img src="public/login.png" width="260"> | <img src="public/Dashboard.png" width="260"> | <img src="public/ForgotPassword.png" width="260"> |
 *Heatmap highlighting recurring issue clusters.*
 ### With a short caption
-![forgot Password](public/ForgotPassword.png)  
+![Heat Map](public/HeatMap.png)  
 
 
 
